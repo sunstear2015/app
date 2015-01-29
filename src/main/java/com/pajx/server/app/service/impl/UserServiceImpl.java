@@ -44,10 +44,10 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Object getByUserName(String username,String type) {
+    public Object[] getByUserName(String username,String type) {
         List usersList=userDao.getByUsername(username);
         if(usersList!=null&&!usersList.isEmpty()){
-           Object o=usersList.get(0);
+           Object[] o= (Object[]) usersList.get(0);
             return o;
         }
         return null;
