@@ -13,24 +13,24 @@ public interface IBaseDao<T>{
      * @param entity  需要保存的实体对象
     *
    */
-    void save(T entity);
+    void save(T entity) throws Exception;
     /**
      * 删除实体
      * @param uuid //需要删除实体的uuid标识
     */
-    void delete(String uuid);
+    void delete(String uuid) throws Exception;
     /**
      * 更新实体
      * @param entity //需要更新的实体对象
      *
     */
-    void update(T entity);
+    void update(T entity) throws Exception;
     /**
     *根据uuid查询对象
      * @param uuid //需要查询对象的uuid标识
      * @return 符合条件的对象
     */
-    T getById(String uuid);
+    T getById(String uuid) throws Exception;
     /**
      * 查询所有
      * @return 集合

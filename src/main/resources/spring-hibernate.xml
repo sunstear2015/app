@@ -3,21 +3,26 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-4.0.xsd
+         http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
         ">
     <context:component-scan base-package="com.pajx.*">
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+       <!-- <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
             </context:component-scan>
     <!-- Hibernate4 -->
     <!-- 加载资源文件  其中包含变量信息，必须在Spring配置文件的最前面加载，即第一个加载-->
     <context:property-placeholder location="classpath:jdbc-oracle.properties" />
+    <!-- 启用Aop AspectJ注解 -->
 
+    <!--<aop:aspectj-autoproxy/>-->
 
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
@@ -38,14 +43,29 @@
     </bean>
     <!-- 数据库映射 -->
     <!--  class="org.springframework.jdbc.datasource.DriverManagerDataSource" -->
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="oracle.jdbc.OracleDriver" />
-        <property name="url" value="${jdbc.url}" />
-        <property name="username" value="${jdbc.user}" />
+    <bean id="dataSource1" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driverClassName}" />
+        <property name="jdbcUrl" value="${jdbc.url}" />
+        <property name="user" value="${jdbc.user}" />
         <property name="password" value="${jdbc.pass}" />
     </bean>
+    <bean id="dataSource2" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driverClassName2}" />
+        <property name="jdbcUrl" value="${jdbc.url2}" />
+        <property name="user" value="${jdbc.user2}" />
+        <property name="password" value="${jdbc.pass2}" />
+    </bean>
+    <bean id="dataSource" class="com.pajx.server.app.utils.database.MultipleDataSource">
+        <property name="targetDataSources">
+            <map>
+                <!-- 注意这里的value是和上面的DataSource的id对应，key要和下面的CustomerContextHolder中的常量对应 -->
+                <entry value-ref="dataSource1" key="oracleDataSource1"/>
+                <entry value-ref="dataSource2" key="oracleDataSource2"/>
+            </map>
 
-
+        </property>
+        <property name="defaultTargetDataSource" ref="dataSource1"/>
+    </bean>
     <!-- 配置Hibernate事务管理器 -->
     <bean id="transactionManager"
           class="org.springframework.orm.hibernate4.HibernateTransactionManager">
@@ -58,5 +78,14 @@
 
   <!--配置基于注解的事物支持-->
     <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
-
+    <!-- 配置一个拦截器对象，处理具体的切换数据源的业务 -->
+  <!-- <bean id="dataSourceMethodInterceptor" class="com.pajx.server.app.Interceptor.DataSourceInterceptor"/>
+    <aop:config>
+        <aop:aspect id="dataSourceAspect" ref="dataSourceMethodInterceptor">
+            <aop:pointcut id="daoOne" expression="execution(* com.pajx.server.app.controller.one.*.*(..))" />
+            <aop:pointcut id="daoTwo" expression="execution(* com.pajx.server.app.controller.two.*.*(..))" />
+            <aop:before pointcut-ref="daoOne" method="setDataSourceOne" />
+            <aop:before pointcut-ref="daoTwo" method="setDataSourceTwo" />
+        </aop:aspect>
+    </aop:config>-->
 </beans>

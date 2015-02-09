@@ -7,7 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by taller on 15/1/27.
@@ -15,18 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @Scope
 @RequestMapping("/")
-public class LoginController extends BaseController {
-
-    /**
-     * Description:  欢迎界面
-     *
-     * @return 页面转到/WEB-INF/pages/hello.jsp
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    public String printWelcome(ModelMap model) {
-        model.addAttribute("message", "Hello world!");
-        return "hello";
-    }
+public class OperateController extends BaseController {
 
     /**
      * Description:     登陆  REST风格: /api/login?username=&password=&usertype=
@@ -35,7 +27,7 @@ public class LoginController extends BaseController {
      * @param call_id                     时间戳 System.currentTimeMillis()
      * @return json
      */
-    @RequestMapping(value = "/api/v1/login")
+    @RequestMapping(value = "/api/v1/operate")
     public
     @ResponseBody
     Object v1_login(@RequestParam String username, @RequestParam String password, @RequestParam String usertype, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
@@ -120,15 +112,5 @@ public class LoginController extends BaseController {
             return jsonObject;
         }
 
-    }
-
-    @RequestMapping(value = "/api", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    Object loginx() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("status", true);
-        jsonObject.put("message", "平安家校app接口");
-        return jsonObject;
     }
 }

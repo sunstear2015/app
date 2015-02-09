@@ -1,10 +1,8 @@
-package com.pajx.server.app.dao.impl;
+package com.pajx.server.app.dao.one.impl;
 
 
 import com.pajx.server.app.base.BaseDaoImpl;
-import com.pajx.server.app.dao.IRoleDao;
-import com.pajx.server.app.dao.ISchoolDao;
-import org.hibernate.SQLQuery;
+import com.pajx.server.app.dao.one.IRoleDao;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

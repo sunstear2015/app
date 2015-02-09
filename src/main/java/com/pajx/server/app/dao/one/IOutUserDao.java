@@ -1,4 +1,4 @@
-package com.pajx.server.app.dao;
+package com.pajx.server.app.dao.one;
 
 
 
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by taller on 15/1/9.
  */
-public interface ISchoolDao extends IBaseDao {
-    public List getSchools(String uuid,String code) ;
+public interface IOutUserDao extends IBaseDao {
     public List getSql(String sql);
+    public List getByOutUser(String username) ;
 }

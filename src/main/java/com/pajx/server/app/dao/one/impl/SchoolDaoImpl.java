@@ -1,9 +1,9 @@
-package com.pajx.server.app.dao.impl;
+package com.pajx.server.app.dao.one.impl;
 
 
 import com.pajx.server.app.base.BaseDaoImpl;
-import com.pajx.server.app.dao.ISchoolDao;
-import com.pajx.server.app.dao.IUserDao;
+import com.pajx.server.app.dao.one.ISchoolDao;
+import com.pajx.server.app.utils.database.CustomerContextHolder;
 import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 
@@ -27,5 +27,13 @@ public  class SchoolDaoImpl extends BaseDaoImpl implements ISchoolDao {
     @Override
     public List getSql(String sql) {
         return this.getCurrentSession().createSQLQuery(sql).list();
+    }
+
+    @Override
+    public List getAreaCode(String sql) {
+        System.out.print(CustomerContextHolder.getCustomerType());
+        CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_ORACLE1);
+       // return this.getCurrentSession().createSQLQuery(sql).list();
+        return  this.getByJdbcSql(sql);
     }
 }

@@ -1,33 +1,24 @@
 package com.pajx.server.app.controller;
 
+
 import com.alibaba.fastjson.JSONObject;
 import com.pajx.server.app.base.BaseController;
 import com.pajx.server.app.utils.security.MD5;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Created by taller on 15/1/27.
+ * Created by admin on 2015/2/2.
  */
 @Controller
 @Scope
 @RequestMapping("/")
-public class LoginController extends BaseController {
-
-    /**
-     * Description:  欢迎界面
-     *
-     * @return 页面转到/WEB-INF/pages/hello.jsp
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    public String printWelcome(ModelMap model) {
-        model.addAttribute("message", "Hello world!");
-        return "hello";
-    }
-
+public class TestController extends BaseController {
     /**
      * Description:     登陆  REST风格: /api/login?username=&password=&usertype=
      *
@@ -35,10 +26,10 @@ public class LoginController extends BaseController {
      * @param call_id                     时间戳 System.currentTimeMillis()
      * @return json
      */
-    @RequestMapping(value = "/api/v1/login")
+    @RequestMapping(value = "/api/v1/test/login")
     public
     @ResponseBody
-    Object v1_login(@RequestParam String username, @RequestParam String password, @RequestParam String usertype, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
+    Object v1_logins(@RequestParam String username, @RequestParam String password, @RequestParam String usertype, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
         JSONObject jsonObject = new JSONObject();
         if (StringUtils.isEmpty(password)) {
             jsonObject.put("status", false);
@@ -48,6 +39,11 @@ public class LoginController extends BaseController {
         if (StringUtils.isEmpty(usertype)) {
             jsonObject.put("status", false);
             jsonObject.put("message", "用户类型为空");
+            return jsonObject;
+        }
+        if (StringUtils.isEmpty(username)) {
+            jsonObject.put("status", false);
+            jsonObject.put("message", "用户名为空");
             return jsonObject;
         }
         if (StringUtils.isEmpty(username)) {
@@ -77,8 +73,8 @@ public class LoginController extends BaseController {
             jsonObject.put("message", "非法请求");
             return jsonObject;
         }
-        Object[] o = new Object[10];
         try {
+            Object[] o = new Object[10];
             if (usertype.equals("1")) {
                 o = userService.getByUserName(username, usertype);
             } else {
@@ -111,7 +107,6 @@ public class LoginController extends BaseController {
             jsonObject.put("ISU_SEX", o[7]);
             jsonObject.put("ISU_PHONE", o[8]);
             jsonObject.put("MANAGER_FLAG", o[9]);
-            jsonObject.put("ISU_ID", o[10]);
             return jsonObject;
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,10 +114,9 @@ public class LoginController extends BaseController {
             jsonObject.put("message", "获取接口失败");
             return jsonObject;
         }
-
     }
 
-    @RequestMapping(value = "/api", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/test", method = RequestMethod.GET)
     public
     @ResponseBody
     Object loginx() {

@@ -1,9 +1,11 @@
 package com.pajx.server.app.base;
 
+import com.pajx.server.app.utils.database.CustomerContextHolder;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.core.ResolvableType;
 import javax.annotation.Resource;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 /**
@@ -13,7 +15,7 @@ public abstract class BaseDaoImpl<T> implements IBaseDao<T> {
     private SessionFactory sessionFactory;
     private  Class<T> clazz;
     @Override
-    public void save(T entity) {
+    public void save(T entity) throws Exception {
        getCurrentSession().save(entity);
     }
 
@@ -22,7 +24,7 @@ public abstract class BaseDaoImpl<T> implements IBaseDao<T> {
         //ParameterizedType pt=(ParameterizedType)this.getClass().getGenericSuperclass();
         ResolvableType rt= ResolvableType.forClass(this.getClass());
         //this.clazz = (Class<T>) pt.getActualTypeArguments()[0];
-        this.clazz= (Class<T>) rt.getInterfaces()[0].getGeneric().resolve();
+       this.clazz= (Class<T>) rt.getInterfaces()[0].getGeneric().resolve();
     }
 
     /**
@@ -30,7 +32,7 @@ public abstract class BaseDaoImpl<T> implements IBaseDao<T> {
     */
 
     @Override
-    public void delete(String uuid) {
+    public void delete(String uuid) throws Exception {
          T entity= (T) getCurrentSession().get(clazz,uuid);
         if (entity!=null){
             getCurrentSession().delete(entity);
@@ -38,12 +40,12 @@ public abstract class BaseDaoImpl<T> implements IBaseDao<T> {
     }
 
     @Override
-    public void update(T entity) {
+    public void update(T entity) throws Exception {
         getCurrentSession().update(entity);
     }
 
     @Override
-    public T getById(String uuid) {
+    public T getById(String uuid) throws Exception {
         return (T)getCurrentSession().get(clazz,uuid);
     }
 
@@ -59,6 +61,7 @@ public abstract class BaseDaoImpl<T> implements IBaseDao<T> {
 
     @Override
     public List<T> getByJdbcSql(String sql) {
+        System.out.print(CustomerContextHolder.getCustomerType()+"-getByJdbcSql");
         return getCurrentSession().createSQLQuery(sql).list();
     }
     public Session getCurrentSession(){
@@ -67,6 +70,6 @@ public abstract class BaseDaoImpl<T> implements IBaseDao<T> {
     }
     @Resource
     public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+        this.sessionFactory= sessionFactory;
     }
 }

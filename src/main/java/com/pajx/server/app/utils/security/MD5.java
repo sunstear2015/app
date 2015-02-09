@@ -1,6 +1,6 @@
 package com.pajx.server.app.utils.security;
 
-public class Md5PwdEncoderUtil {
+public class MD5 {
 
 	static final int S11 = 7;
 	static final int S12 = 12;
@@ -29,7 +29,7 @@ public class Md5PwdEncoderUtil {
 	private byte[] digest = new byte[16];
 
 	public static String encrytion(String input) {
-		Md5PwdEncoderUtil md5 = new Md5PwdEncoderUtil();
+		MD5 md5 = new MD5();
 		String inbuf = md5.changeContent(input);
 		String ninbuf = md5.getMD5Content(inbuf);
 		return md5.changeContent(ninbuf).toLowerCase();
@@ -46,7 +46,7 @@ public class Md5PwdEncoderUtil {
 		return digestHexStr;
 	}
 
-	public Md5PwdEncoderUtil() {
+	public MD5() {
 		md5Init();
 		return;
 	}
@@ -264,7 +264,7 @@ public class Md5PwdEncoderUtil {
 	}
 
 	public static String cardEncrytion(String schoolNum) {
-		Md5PwdEncoderUtil md5 = new Md5PwdEncoderUtil();
+		MD5 md5 = new MD5();
 		String inbuf = md5.changeContent(schoolNum);
 		inbuf = inbuf + "#K_S@06^2!";
 		String md5Content = md5.getMD5Content(inbuf);
@@ -278,7 +278,7 @@ public class Md5PwdEncoderUtil {
 	}
 	
 	public static void main(String args[]) {
-		String input = Md5PwdEncoderUtil.encrytion("00000000");
+		String input = MD5.encrytion("00000000");
 		System.out.println(input);
 	}
 
