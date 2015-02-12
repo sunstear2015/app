@@ -3,18 +3,19 @@ package com.pajx.server.app.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.pajx.server.app.base.BaseController;
 import com.pajx.server.app.utils.database.CustomerContextHolder;
-import com.pajx.server.app.utils.security.MD5;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by taller on 15/1/27.
@@ -22,19 +23,18 @@ import java.util.List;
 @Controller
 @Scope
 @RequestMapping("/")
-public class OperateController extends BaseController {
+public class VersionController extends BaseController {
 
     /**
      * Description:     运营分析
      *
-     * @param deptcode
      * @param call_id                     时间戳 System.currentTimeMillis()
      * @return json
      */
-    @RequestMapping(value = "/api/v1/operate",method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/version",method = RequestMethod.POST)
     public
     @ResponseBody
-    Object v1_login(@RequestParam String deptcode, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
+    Object v1_version( @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
         try {
             JSONObject jsonObject = new JSONObject();
             if (StringUtils.isEmpty(pajx_sign)) {
@@ -53,30 +53,23 @@ public class OperateController extends BaseController {
                     return jsonObject;
                 }
             }
-            String sign = generate_sign(deptcode);
+            String sign = generate_sign();
             if (!sign.equals(pajx_sign)) {
                 jsonObject.put("status", false);
                 jsonObject.put("message", "非法请求");
                 return jsonObject;
             }
-            CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_ORACLE2);
-            List operateList=operateService.getOperate(deptcode);
-            List<JSONObject> listobj = new ArrayList<JSONObject>();
-            if (operateList != null && !operateList.isEmpty()) {
-                for (int i = 0; i < operateList.size(); i++) {
-                    Object[] o= (Object[]) operateList.get(i);
-                    JSONObject jsonObj = new JSONObject();
-                    jsonObj.put("TOTAL_USER",o[0]);
-                    jsonObj.put("PER_CLOSE_NUM",o[1]);
-                    jsonObj.put("PER_OPEN_NUM",o[2]);
-                    jsonObj.put("YW_ENDDATE",o[3]);
-                    listobj.add(jsonObj);
-                }
+            Properties props = new Properties();
+            InputStream in = this.getClass().getClassLoader().getResourceAsStream(
+                    "android_version.properties");
+            props.load(in);
+            Enumeration en = props.propertyNames();
+            while (en.hasMoreElements()) {
+                String key = (String) en.nextElement();
+                jsonObject.put(key,props.getProperty(key));
             }
-            jsonObject.put("OPERATE",listobj);
             jsonObject.put("status", true);
             jsonObject.put("message", "获取数据成功");
-            CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_ORACLE1);
             return jsonObject;
         } catch (Exception e) {
             e.printStackTrace();

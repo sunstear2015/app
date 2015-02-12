@@ -1,9 +1,8 @@
 package com.pajx.server.app.service.one.impl;
 
 
-import com.pajx.server.app.dao.one.ISchoolDao;
+import com.pajx.server.app.dao.ISchoolDao;
 import com.pajx.server.app.service.one.IOneSchoolService;
-import com.pajx.server.app.utils.database.CustomerContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -119,10 +118,10 @@ public class OneSchoolServiceImpl implements IOneSchoolService {
     @Override
     public List getSchoolDetail(String sclid,String startdate, String enddate) throws Exception {
         StringBuffer sclSql = new StringBuffer();
-            sclSql.append(" SELECT * FROM(SELECT count(*) as count1 FROM HOME_SCHOOL.BOSS_BIZBILL biz,HOME_SCHOOL.HS_FAMILY_INFO fam,HOME_SCHOOL.HS_STUDENT_INFO stu WHERE biz.BILL_ID=fam.LAST_BIZ_ID AND fam.STU_ID=stu.STU_ID AND biz.BILL_STATUS_FLAG in ('1','2','3') AND biz.ORD_TYPE ='03' AND fam.BIZ_STATUS_FLAG='0' AND fam.FAM_STATUS_FLAG='1' AND stu.STU_STATUS_FLAG='1'  AND stu.GRADUATE_FLAG='0' AND biz.APPLY_TIME>='"+startdate+"' AND biz.APPLY_TIME<'"+enddate+"' AND biz.APPLY_TIME IS NOT NULL AND stu.SCL_ID='"+sclid+"'),");
-            sclSql.append(" (SELECT count(*) as count2 FROM HOME_SCHOOL.BOSS_BIZBILL biz,HOME_SCHOOL.HS_FAMILY_INFO fam,HOME_SCHOOL.HS_STUDENT_INFO stu WHERE biz.BILL_ID=fam.LAST_BIZ_ID AND fam.STU_ID=stu.STU_ID AND biz.BILL_STATUS_FLAG ='4' AND biz.ORD_TYPE ='03' AND fam.FAM_STATUS_FLAG='1' AND stu.STU_STATUS_FLAG='1'  AND stu.GRADUATE_FLAG='0' AND biz.DEAL_TIME>='"+startdate+"' AND biz.DEAL_TIME<'"+enddate+"' AND biz.DEAL_TIME IS NOT NULL AND stu.SCL_ID='"+sclid+"' ),");
-            sclSql.append(" (SELECT count(*) as count3 FROM HOME_SCHOOL.BOSS_BIZBILL biz,HOME_SCHOOL.HS_FAMILY_INFO fam,HOME_SCHOOL.HS_STUDENT_INFO stu WHERE biz.BILL_ID=fam.LAST_BIZ_ID AND fam.STU_ID=stu.STU_ID AND biz.BILL_STATUS_FLAG = '4' AND biz.ORD_TYPE in ('04','09') AND fam.FAM_STATUS_FLAG='1' AND stu.STU_STATUS_FLAG='1'  AND stu.GRADUATE_FLAG='0' AND biz.DEAL_TIME>='"+startdate+"' AND biz.DEAL_TIME<'"+enddate+"' AND biz.DEAL_TIME IS NOT NULL AND stu.SCL_ID='"+sclid+"' ),");
-            sclSql.append(" (SELECT count(*) as count4 FROM HOME_SCHOOL.BOSS_BIZBILL biz,HOME_SCHOOL.HS_FAMILY_INFO fam,HOME_SCHOOL.HS_STUDENT_INFO stu WHERE biz.BILL_ID=fam.LAST_BIZ_ID AND fam.STU_ID=stu.STU_ID AND biz.BILL_STATUS_FLAG in ('1','2','3') AND biz.ORD_TYPE in ('04','09') AND fam.BIZ_STATUS_FLAG='0' AND fam.FAM_STATUS_FLAG='1' AND stu.STU_STATUS_FLAG='1' AND stu.GRADUATE_FLAG='0' AND biz.APPLY_TIME>='"+sclid+"' AND biz.APPLY_TIME<'"+enddate+"' AND biz.APPLY_TIME IS NOT NULL AND stu.SCL_ID='"+sclid+"')");
+            sclSql.append(" SELECT * FROM(SELECT count(1) as count1 FROM HOME_SCHOOL.BOSS_BIZBILL biz,HOME_SCHOOL.HS_FAMILY_INFO fam,HOME_SCHOOL.HS_STUDENT_INFO stu WHERE biz.BILL_ID=fam.LAST_BIZ_ID AND fam.STU_ID=stu.STU_ID AND biz.BILL_STATUS_FLAG in ('1','2','3') AND biz.ORD_TYPE ='03' AND fam.BIZ_STATUS_FLAG='0' AND fam.FAM_STATUS_FLAG='1' AND stu.STU_STATUS_FLAG='1'  AND stu.GRADUATE_FLAG='0' AND biz.APPLY_TIME>='"+startdate+"' AND biz.APPLY_TIME<'"+enddate+"' AND biz.APPLY_TIME IS NOT NULL AND stu.SCL_ID='"+sclid+"'),");
+            sclSql.append(" (SELECT count(1) as count2 FROM HOME_SCHOOL.BOSS_BIZBILL biz,HOME_SCHOOL.HS_FAMILY_INFO fam,HOME_SCHOOL.HS_STUDENT_INFO stu WHERE biz.BILL_ID=fam.LAST_BIZ_ID AND fam.STU_ID=stu.STU_ID AND biz.BILL_STATUS_FLAG ='4' AND biz.ORD_TYPE ='03' AND fam.FAM_STATUS_FLAG='1' AND stu.STU_STATUS_FLAG='1'  AND stu.GRADUATE_FLAG='0' AND biz.DEAL_TIME>='"+startdate+"' AND biz.DEAL_TIME<'"+enddate+"' AND biz.DEAL_TIME IS NOT NULL AND stu.SCL_ID='"+sclid+"' ),");
+            sclSql.append(" (SELECT count(1) as count3 FROM HOME_SCHOOL.BOSS_BIZBILL biz,HOME_SCHOOL.HS_FAMILY_INFO fam,HOME_SCHOOL.HS_STUDENT_INFO stu WHERE biz.BILL_ID=fam.LAST_BIZ_ID AND fam.STU_ID=stu.STU_ID AND biz.BILL_STATUS_FLAG = '4' AND biz.ORD_TYPE in ('04','09') AND fam.FAM_STATUS_FLAG='1' AND stu.STU_STATUS_FLAG='1'  AND stu.GRADUATE_FLAG='0' AND biz.DEAL_TIME>='"+startdate+"' AND biz.DEAL_TIME<'"+enddate+"' AND biz.DEAL_TIME IS NOT NULL AND stu.SCL_ID='"+sclid+"' ),");
+            sclSql.append(" (SELECT count(1) as count4 FROM HOME_SCHOOL.BOSS_BIZBILL biz,HOME_SCHOOL.HS_FAMILY_INFO fam,HOME_SCHOOL.HS_STUDENT_INFO stu WHERE biz.BILL_ID=fam.LAST_BIZ_ID AND fam.STU_ID=stu.STU_ID AND biz.BILL_STATUS_FLAG in ('1','2','3') AND biz.ORD_TYPE in ('04','09') AND fam.BIZ_STATUS_FLAG='0' AND fam.FAM_STATUS_FLAG='1' AND stu.STU_STATUS_FLAG='1' AND stu.GRADUATE_FLAG='0' AND biz.APPLY_TIME>='"+sclid+"' AND biz.APPLY_TIME<'"+enddate+"' AND biz.APPLY_TIME IS NOT NULL AND stu.SCL_ID='"+sclid+"')");
         List schoolsList = schoolDao.getSql(sclSql.toString());
         return schoolsList;
     }

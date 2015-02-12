@@ -1,7 +1,7 @@
 package com.pajx.server.app.service.one.impl;
 
 
-import com.pajx.server.app.dao.one.IOutUserDao;
+import com.pajx.server.app.dao.IOutUserDao;
 import com.pajx.server.app.service.one.IOutUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

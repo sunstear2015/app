@@ -74,7 +74,7 @@ public class TestController extends BaseController {
             return jsonObject;
         }
         try {
-            Object[] o = new Object[10];
+            Object[] o = new Object[11];
             if (usertype.equals("1")) {
                 o = userService.getByUserName(username, usertype);
             } else {
@@ -107,6 +107,8 @@ public class TestController extends BaseController {
             jsonObject.put("ISU_SEX", o[7]);
             jsonObject.put("ISU_PHONE", o[8]);
             jsonObject.put("MANAGER_FLAG", o[9]);
+            jsonObject.put("ISU_ID", o[10]);
+            jsonObject.put("DEPT_NAME", o[11]);
             return jsonObject;
         } catch (Exception e) {
             e.printStackTrace();

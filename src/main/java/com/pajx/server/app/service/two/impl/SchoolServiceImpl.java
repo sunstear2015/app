@@ -1,9 +1,7 @@
 package com.pajx.server.app.service.two.impl;
 
 
-import com.pajx.server.app.dao.one.IRoleDao;
-import com.pajx.server.app.dao.one.ISchoolDao;
-import com.pajx.server.app.dao.one.IUserDao;
+import com.pajx.server.app.dao.ISchoolDao;
 import com.pajx.server.app.service.two.ISchoolService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,26 +16,10 @@ import java.util.List;
 @Transactional
 public class SchoolServiceImpl implements ISchoolService {
     private ISchoolDao schoolDao;
-    private IRoleDao roleDao;
-    private IUserDao userDao;
-
-    @Resource
-    public void setUserDao(IUserDao userDao) {
-        this.userDao = userDao;
-    }
     @Resource
     public void setSchoolDao(ISchoolDao schoolDao) {
         this.schoolDao = schoolDao;
     }
-
-    
-    
-
-    @Resource
-    public void setRoleDao(IRoleDao roleDao) {
-        this.roleDao = roleDao;
-    }
-
     @Override
     public List getSchools(String uuid, String rolecode, String deptcode, String managerflag) throws Exception {
         //全部数据  特殊权限

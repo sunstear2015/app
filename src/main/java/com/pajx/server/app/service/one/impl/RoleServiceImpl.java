@@ -1,7 +1,7 @@
 package com.pajx.server.app.service.one.impl;
 
 
-import com.pajx.server.app.dao.one.IRoleDao;
+import com.pajx.server.app.dao.IRoleDao;
 import com.pajx.server.app.service.one.IRoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -35,7 +35,7 @@ public class LoginController extends BaseController {
      * @param call_id                     时间戳 System.currentTimeMillis()
      * @return json
      */
-    @RequestMapping(value = "/api/v1/login")
+    @RequestMapping(value = "/api/v1/login",method = RequestMethod.POST)
     public
     @ResponseBody
     Object v1_login(@RequestParam String username, @RequestParam String password, @RequestParam String usertype, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
@@ -77,7 +77,7 @@ public class LoginController extends BaseController {
             jsonObject.put("message", "非法请求");
             return jsonObject;
         }
-        Object[] o = new Object[10];
+        Object[] o = new Object[11];
         try {
             if (usertype.equals("1")) {
                 o = userService.getByUserName(username, usertype);
@@ -89,8 +89,7 @@ public class LoginController extends BaseController {
                 jsonObject.put("message", "用户不存在");
                 return jsonObject;
             }
-            String pwd = MD5.encrytion(password);
-            if (!pwd.equals(o[1])) {
+            if (!password.equals(o[1])) {
                 jsonObject.put("status", false);
                 jsonObject.put("message", "用户密码错误");
                 return jsonObject;
@@ -112,6 +111,7 @@ public class LoginController extends BaseController {
             jsonObject.put("ISU_PHONE", o[8]);
             jsonObject.put("MANAGER_FLAG", o[9]);
             jsonObject.put("ISU_ID", o[10]);
+            jsonObject.put("DEPT_NAME", o[11]);
             return jsonObject;
         } catch (Exception e) {
             e.printStackTrace();

@@ -28,11 +28,33 @@ public class SchoolController extends BaseController {
      * @param managerflag 是否是大区经理,0否，1是
      * @return json
      */
-    @RequestMapping(value = "/api/v1/school")
+    @RequestMapping(value = "/api/v1/school",method = RequestMethod.POST)
     public
     @ResponseBody
-    JSONObject v1_schoolIndex(@RequestParam String uuid, @RequestParam String rolecode, @RequestParam String deptcode, @RequestParam String managerflag, @RequestParam String usertype) {
+    JSONObject v1_schoolIndex(@RequestParam String uuid, @RequestParam String rolecode, @RequestParam String deptcode, @RequestParam String managerflag, @RequestParam String usertype, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
         JSONObject jsonObject = new JSONObject();
+        if (StringUtils.isEmpty(pajx_sign)) {
+            jsonObject.put("status", false);
+            jsonObject.put("message", "参数签名为空");
+            return jsonObject;
+        }
+        if (StringUtils.isEmpty(api_key)) {
+            jsonObject.put("status", false);
+            jsonObject.put("message", "api_key为空");
+            return jsonObject;
+        } else {
+            if (!api_key.equals(this.api_key)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "api_key错误");
+                return jsonObject;
+            }
+        }
+        String sign = generate_sign(uuid,rolecode,deptcode,managerflag,usertype);
+        if (!sign.equals(pajx_sign)) {
+            jsonObject.put("status", false);
+            jsonObject.put("message", "非法请求");
+            return jsonObject;
+        }
         String areaCode = "";
         try {
             if (usertype.equals("1")) {
@@ -52,7 +74,7 @@ public class SchoolController extends BaseController {
                         jsonObject1.put("EQU_OVER_RATE", o[3]);
                         jsonObject1.put("EQU_FAULT_RATE", o[4]);
                         jsonObject1.put("MON_CLOSE_RATE", o[5]);
-                        jsonObject1.put("INSCH_OPEN_NUM",o[6]);
+                        jsonObject1.put("INSCH_OPEN_NUM", o[6]);
                         listobj.add(jsonObject1);
                     }
                 }
@@ -75,6 +97,7 @@ public class SchoolController extends BaseController {
             return jsonObject;
         }
     }
+
     public String getAreaCode(String deptcode) {
         CustomerContextHolder.clearCustomerType();
         CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_ORACLE1);
@@ -92,37 +115,41 @@ public class SchoolController extends BaseController {
         }
         return null;
     }
+
     /**
      * Description:    获取学校详细数据
      *
      * @param sclid, 学校id
      * @return json
      */
-    @RequestMapping(value = "/api/v1/school/detail")
+    @RequestMapping(value = "/api/v1/school/detail",method = RequestMethod.POST)
     public
     @ResponseBody
     JSONObject v1_schoolDetail(@RequestParam String sclid, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
-        String endDate = "";
         try {
             JSONObject jsonObject = new JSONObject();
-           /*  CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_ORACLE2);
-            List schoolsList = schoolService.getSchoolDetail(sclid);
-            if (schoolsList != null && !schoolsList.isEmpty()) {
-                Object[] obj = (Object[]) schoolsList.get(0);
-                jsonObject.put("SCL_NAME", obj[0]);
-                jsonObject.put("AREA_NAME", obj[1]);
-                jsonObject.put("EQU_ATT_NUM", obj[2]);
-                jsonObject.put("EQU_TEL_NUM", obj[3]);
-                jsonObject.put("SALE_USER_NAME", obj[4]);
-                jsonObject.put("MOB_MANAGER_NAME", obj[5]);
-                jsonObject.put("INSCH_NUM", obj[6]);
-                jsonObject.put("INSCH_OPEN_NUM", obj[7]);
-                jsonObject.put("DAY_OPEN_NUM", obj[8]);
-                jsonObject.put("DAY_CLOSE_NUM", obj[9]);
-                jsonObject.put("SCL_ID", sclid);
-                jsonObject.put("status", true);
-                jsonObject.put("message", "调用接口成功");
-            }*/
+            if (StringUtils.isEmpty(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "参数签名为空");
+                return jsonObject;
+            }
+            if (StringUtils.isEmpty(api_key)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "api_key为空");
+                return jsonObject;
+            } else {
+                if (!api_key.equals(this.api_key)) {
+                    jsonObject.put("status", false);
+                    jsonObject.put("message", "api_key错误");
+                    return jsonObject;
+                }
+            }
+            String sign = generate_sign(sclid);
+            if (!sign.equals(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "非法请求");
+                return jsonObject;
+            }
             CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_ORACLE1);
             List oneSchoolsList = oneSchoolService.getSchoolDetail(sclid);
             if (oneSchoolsList != null && !oneSchoolsList.isEmpty()) {
@@ -161,17 +188,17 @@ public class SchoolController extends BaseController {
     }
 
     /**
-     * Description:    获取学校详细数据
+     * Description:    七天回溯
      *
      * @param sclid, 学校id
      * @return json
      */
-    @RequestMapping(value = "/api/v1/school/detail/track")
+    @RequestMapping(value = "/api/v1/school/detail/track",method = RequestMethod.POST)
     public
     @ResponseBody
     JSONObject v1_schoolDetailTrack(@RequestParam String sclid, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
-        String endDate = "20140108";
-       // String startDate = "";
+       String endDate = FormatDate.dateChange();
+        //String endDate ="20140108";
         try {
             JSONObject jsonObject = new JSONObject();
             List<JSONObject> listobj = new ArrayList<JSONObject>();
@@ -184,11 +211,11 @@ public class SchoolController extends BaseController {
                 String startDate6 = FormatDate.daysBeforeOneDate(endDate, 6);
                 String startDate7 = FormatDate.daysBeforeOneDate(endDate, 7);
                 //开通中
-                List nowdate_1List = oneSchoolService.getSchoolDetail(sclid,startDate1, endDate);
+                List nowdate_1List = oneSchoolService.getSchoolDetail(sclid, startDate1, endDate);
                 //开通
-                List nowdate_2List = oneSchoolService.getSchoolDetail(sclid,startDate2, startDate1);
+                List nowdate_2List = oneSchoolService.getSchoolDetail(sclid, startDate2, startDate1);
                 //已退订
-                List nowdate_3List = oneSchoolService.getSchoolDetail(sclid,startDate3, startDate2);
+                List nowdate_3List = oneSchoolService.getSchoolDetail(sclid, startDate3, startDate2);
                 //退订中
                 List nowdate_4List = oneSchoolService.getSchoolDetail(sclid, startDate4, startDate3);
                 List nowdate_5List = oneSchoolService.getSchoolDetail(sclid, startDate5, startDate4);
@@ -210,7 +237,7 @@ public class SchoolController extends BaseController {
                     for (int i = 0; i < nowdate_2List.size(); i++) {
                         Object[] obj = (Object[]) nowdate_2List.get(i);
                         JSONObject jsonObject_1 = new JSONObject();
-                        jsonObject_1.put("DATE",startDate2);
+                        jsonObject_1.put("DATE", startDate2);
                         jsonObject_1.put("DAY_OPEN_IN_NUM", obj[0]);
                         jsonObject_1.put("DAY_OPEN_NUM", obj[1]);
                         jsonObject_1.put("DAY_CLOSE_NUM", obj[2]);
@@ -222,7 +249,7 @@ public class SchoolController extends BaseController {
                     for (int i = 0; i < nowdate_3List.size(); i++) {
                         Object[] obj = (Object[]) nowdate_3List.get(i);
                         JSONObject jsonObject_1 = new JSONObject();
-                        jsonObject_1.put("DATE",startDate3);
+                        jsonObject_1.put("DATE", startDate3);
                         jsonObject_1.put("DAY_OPEN_IN_NUM", obj[0]);
                         jsonObject_1.put("DAY_OPEN_NUM", obj[1]);
                         jsonObject_1.put("DAY_CLOSE_NUM", obj[2]);
@@ -246,7 +273,7 @@ public class SchoolController extends BaseController {
                     for (int i = 0; i < nowdate_5List.size(); i++) {
                         Object[] obj = (Object[]) nowdate_5List.get(i);
                         JSONObject jsonObject_1 = new JSONObject();
-                        jsonObject_1.put("DATE",startDate5);
+                        jsonObject_1.put("DATE", startDate5);
                         jsonObject_1.put("DAY_OPEN_IN_NUM", obj[0]);
                         jsonObject_1.put("DAY_OPEN_NUM", obj[1]);
                         jsonObject_1.put("DAY_CLOSE_NUM", obj[2]);

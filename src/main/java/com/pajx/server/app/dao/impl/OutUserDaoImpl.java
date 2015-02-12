@@ -1,8 +1,8 @@
-package com.pajx.server.app.dao.one.impl;
+package com.pajx.server.app.dao.impl;
 
 
 import com.pajx.server.app.base.BaseDaoImpl;
-import com.pajx.server.app.dao.one.IOutUserDao;
+import com.pajx.server.app.dao.IOutUserDao;
 import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 

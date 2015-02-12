@@ -1,4 +1,4 @@
-package com.pajx.server.app.dao.one;
+package com.pajx.server.app.dao;
 
 
 

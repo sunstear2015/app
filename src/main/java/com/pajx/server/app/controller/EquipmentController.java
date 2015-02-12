@@ -27,13 +27,35 @@ public class EquipmentController extends BaseController {
      * @param call_id 时间戳 System.currentTimeMillis()
      * @return json
      */
-    @RequestMapping(value = "/api/v1/equipment")
+    @RequestMapping(value = "/api/v1/equipment",method = RequestMethod.POST)
     public
     @ResponseBody
     Object v1_sclquioment(@RequestParam String sclid, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
         try {
-            List<Equipment> equList = equipmentService.geEquipments(sclid);
             JSONObject jsonObject = new JSONObject();
+            if (StringUtils.isEmpty(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "参数签名为空");
+                return jsonObject;
+            }
+            if (StringUtils.isEmpty(api_key)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "api_key为空");
+                return jsonObject;
+            } else {
+                if (!api_key.equals(this.api_key)) {
+                    jsonObject.put("status", false);
+                    jsonObject.put("message", "api_key错误");
+                    return jsonObject;
+                }
+            }
+            String sign = generate_sign(sclid);
+            List<Equipment> equList = equipmentService.geEquipments(sclid);
+            if (!sign.equals(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "非法请求");
+                return jsonObject;
+            }
             List<JSONObject> listobj = new ArrayList<JSONObject>();
             for (int i = 0; i < equList.size(); i++) {
                 Equipment equ = equList.get(i);
@@ -65,12 +87,34 @@ public class EquipmentController extends BaseController {
      * @param call_id 时间戳 System.currentTimeMillis()
      * @return json
      */
-    @RequestMapping(value = "/api/v1/equipment/detail")
+    @RequestMapping(value = "/api/v1/equipment/detail",method = RequestMethod.POST)
     public
     @ResponseBody
     Object v1_equioment(@RequestParam String equid, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
         try {
             JSONObject jsonObject = new JSONObject();
+            if (StringUtils.isEmpty(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "参数签名为空");
+                return jsonObject;
+            }
+            if (StringUtils.isEmpty(api_key)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "api_key为空");
+                return jsonObject;
+            } else {
+                if (!api_key.equals(this.api_key)) {
+                    jsonObject.put("status", false);
+                    jsonObject.put("message", "api_key错误");
+                    return jsonObject;
+                }
+            }
+            String sign = generate_sign(equid);
+            if (!sign.equals(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "非法请求");
+                return jsonObject;
+            }
             Equipment equ = equipmentService.getById(equid);
             String EQU_SOFT_TYPE = "";
             if (StringUtils.isNotEmpty(equ.getEQU_NAME_DC())) {
@@ -89,7 +133,7 @@ public class EquipmentController extends BaseController {
             jsonObject.put("EQU_APN_SIM", equ.getEQU_APN_SIM());
             jsonObject.put("EQU_START_DATE", equ.getEQU_START_DATE());
             jsonObject.put("EQU_DESCRIP", equ.getEQU_DESCRIP());
-            jsonObject.put("EQU_ATT_INOUT_TYPE",equ.getEQU_ATT_INOUT_TYPE());
+            jsonObject.put("EQU_ATT_INOUT_TYPE", equ.getEQU_ATT_INOUT_TYPE());
             jsonObject.put("REMARK", equ.getREMARK());
             jsonObject.put("status", true);
             jsonObject.put("message", "调用接口成功");
@@ -110,42 +154,87 @@ public class EquipmentController extends BaseController {
      * @param call_id   时间戳 System.currentTimeMillis()
      * @return json
      */
-    @RequestMapping(value = "/api/v1/equipment/add")
+    @RequestMapping(value = "/api/v1/equipment/add",method = RequestMethod.POST)
     public
     @ResponseBody
     Object v1_addEquioment(@ModelAttribute Equipment equipment, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
         try {
             JSONObject jsonObject = new JSONObject();
+            if (StringUtils.isEmpty(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "参数签名为空");
+                return jsonObject;
+            }
+            if (StringUtils.isEmpty(api_key)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "api_key为空");
+                return jsonObject;
+            } else {
+                if (!api_key.equals(this.api_key)) {
+                    jsonObject.put("status", false);
+                    jsonObject.put("message", "api_key错误");
+                    return jsonObject;
+                }
+            }
+            /*String sign = generate_sign(equipment.toString()
+            );
+            if (!sign.equals(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "非法请求");
+                return jsonObject;
+            }*/
             equipmentService.save(equipment);
             jsonObject.put("status", true);
-            jsonObject.put("message", "调用接口成功");
+            jsonObject.put("message", "保存成功");
             return jsonObject;
         } catch (Exception e) {
             e.printStackTrace();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("status", false);
-            jsonObject.put("message", "调用接口失败");
+            jsonObject.put("message", "保存失败");
             return jsonObject;
         }
     }
     /**
-     * Description:     删除设备
+     * Description:     校验设备
      *
      * @param equno
      * @param call_id 时间戳 System.currentTimeMillis()
      * @return json
      */
-    @RequestMapping(value = "/api/v1/equipment/check")
+    @RequestMapping(value = "/api/v1/equipment/check",method = RequestMethod.POST)
     public
     @ResponseBody
-    Object v1_deleteEquioment(@RequestParam int equno,@RequestParam int equtype, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
+    Object v1_checkEquioment(@RequestParam int equno, @RequestParam int equtype, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
         try {
             JSONObject jsonObject = new JSONObject();
-            Equipment equipment = equipmentService.getByNo(equno,equtype);
+            if (StringUtils.isEmpty(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "参数签名为空");
+                return jsonObject;
+            }
+            if (StringUtils.isEmpty(api_key)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "api_key为空");
+                return jsonObject;
+            } else {
+                if (!api_key.equals(this.api_key)) {
+                    jsonObject.put("status", false);
+                    jsonObject.put("message", "api_key错误");
+                    return jsonObject;
+                }
+            }
+            String sign = generate_sign(String.valueOf(equno), String.valueOf(equtype));
+            if (!sign.equals(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "非法请求");
+                return jsonObject;
+            }
+            Equipment equipment = equipmentService.getByNo(equno, equtype);
             if (equipment == null) {
                 jsonObject.put("status", true);
-                jsonObject.put("message", "调用接口成功");
-            }else{
+                jsonObject.put("message", "查询成功");
+            } else {
                 jsonObject.put("status", false);
                 jsonObject.put("message", "设备流水号已存在");
             }
@@ -156,6 +245,55 @@ public class EquipmentController extends BaseController {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("status", false);
             jsonObject.put("message", "调用接口失败");
+            return jsonObject;
+        }
+    }
+    /**
+     * Description:    删除设备
+     *
+     * @param equid
+     * @param call_id 时间戳 System.currentTimeMillis()
+     * @return json
+     */
+    @RequestMapping(value = "/api/v1/equipment/delete",method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Object v1_deleteEuioment(@RequestParam String equid, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            if (StringUtils.isEmpty(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "参数签名为空");
+                return jsonObject;
+            }
+            if (StringUtils.isEmpty(api_key)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "api_key为空");
+                return jsonObject;
+            } else {
+                if (!api_key.equals(this.api_key)) {
+                    jsonObject.put("status", false);
+                    jsonObject.put("message", "api_key错误");
+                    return jsonObject;
+                }
+            }
+            String sign = generate_sign(equid);
+            if (!sign.equals(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "非法请求");
+                return jsonObject;
+            }
+            Equipment equ = equipmentService.getById(equid);
+            equ.setEQU_STATUS_FLAG("0");
+            equipmentService.update(equ);
+            jsonObject.put("status", true);
+            jsonObject.put("message", "删除成功");
+            return jsonObject;
+        } catch (Exception e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("status", false);
+            jsonObject.put("message", "删除失败");
             return jsonObject;
         }
     }

@@ -1,10 +1,9 @@
-package com.pajx.server.app.dao.one.impl;
+package com.pajx.server.app.dao.impl;
 
 
 import com.pajx.server.app.base.BaseDaoImpl;
-import com.pajx.server.app.dao.one.IEquipmentDao;
+import com.pajx.server.app.dao.IEquipmentDao;
 import com.pajx.server.app.entity.Equipment;
-import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 /**

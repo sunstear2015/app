@@ -1,7 +1,7 @@
 package com.pajx.server.app.service.one.impl;
 
 
-import com.pajx.server.app.dao.one.IEquipmentDao;
+import com.pajx.server.app.dao.IEquipmentDao;
 import com.pajx.server.app.entity.Equipment;
 import com.pajx.server.app.service.one.IEquipmentService;
 import org.springframework.stereotype.Service;

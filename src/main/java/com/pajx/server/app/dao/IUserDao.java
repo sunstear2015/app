@@ -1,4 +1,4 @@
-package com.pajx.server.app.dao.one;
+package com.pajx.server.app.dao;
 
 
 
@@ -11,6 +11,6 @@ import java.util.List;
  * Created by taller on 15/1/9.
  */
 public interface IUserDao extends IBaseDao {
-    public List getByUsername(String username) ;
-    public List getSql(String sql);
+    public List getByUsername(String username) throws Exception;
+    public List getSql(String sql) throws Exception;
 }

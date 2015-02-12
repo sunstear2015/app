@@ -1,8 +1,9 @@
 package com.pajx.server.app.service.one.impl;
 
 
-import com.pajx.server.app.dao.one.IUserDao;
+import com.pajx.server.app.dao.IUserDao;
 import com.pajx.server.app.service.one.IUserService;
+import com.pajx.server.app.utils.common.DicUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * Created by taller on 15/1/9.
  */
 @Service
+@Transactional
 public class UserServiceImpl implements IUserService {
 
     private IUserDao userDao;
@@ -21,28 +23,6 @@ public class UserServiceImpl implements IUserService {
     public void setUserDao(IUserDao userDao) {
         this.userDao = userDao;
     }
-
-    @Override
-    @Transactional
-    public void save() {
-
-    }
-
-    @Override
-    public void delete(String id) {
-
-    }
-
-    @Override
-    public List getAllUser() {
-        return null;
-    }
-
-    @Override
-    public void update() {
-
-    }
-
     @Override
     public Object[] getByUserName(String username,String type)throws Exception{
         List usersList=userDao.getByUsername(username);
@@ -87,6 +67,14 @@ public class UserServiceImpl implements IUserService {
         sb.append(" where fam.FAM_STATUS_FLAG='1'");
         sb.append(" and fam.STU_ID='").append(stuid).append("'");
         sb.append(" GROUP BY fam.FAM_PHONE,biz.ORD_TYPE,biz.BILL_STATUS_FLAG,fam.LAST_DEAL_TIME,fam.FAM_ORDER,fam.FAM_RELATION,biz.PRICE");
+        List usersList=userDao.getSql(sb.toString());
+        return usersList;
+    }
+
+    @Override
+    public List getDept() throws Exception {
+        StringBuffer sb=new StringBuffer();
+        sb.append(" SELECT dept.DEPT_CODE,dept.DEPT_NAME FROM SYS_DEPARTMENT dept where dept.PARENT_CODE='").append(DicUtils.DEPT_PARENT).append("'");
         List usersList=userDao.getSql(sb.toString());
         return usersList;
     }
