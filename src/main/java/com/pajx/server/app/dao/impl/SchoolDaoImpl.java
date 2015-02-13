@@ -31,9 +31,6 @@ public  class SchoolDaoImpl extends BaseDaoImpl implements ISchoolDao {
 
     @Override
     public List getAreaCode(String sql) {
-        System.out.print(CustomerContextHolder.getCustomerType());
-        CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_ORACLE1);
-       // return this.getCurrentSession().createSQLQuery(sql).list();
-        return  this.getByJdbcSql(sql);
+       return this.getCurrentSession().createSQLQuery(sql).list();
     }
 }

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 销售排行榜
  * Created by taller on 15/1/27.
  */
 @Controller
@@ -23,7 +24,7 @@ import java.util.List;
 public class SaleController extends BaseController {
 
     /**
-     * Description:     用户查询
+     * Description:    销售排行榜
      * @param call_id 时间戳 System.currentTimeMillis()
      * @return json
      */

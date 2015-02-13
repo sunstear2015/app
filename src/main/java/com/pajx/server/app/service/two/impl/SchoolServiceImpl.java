@@ -29,7 +29,6 @@ public class SchoolServiceImpl implements ISchoolService {
             sclSql.append(" and sch.YW_ENDDATE=(select max(p.YW_ENDDATE) from YW_RPT_SCH_DAYDETAIL p)");
             sclSql.append(" order by sch.SCL_NAME asc");
             List schoolsList = schoolDao.getSql(sclSql.toString());
-            System.out.print(schoolsList);
             if (schoolsList != null && !schoolsList.isEmpty()) {
                 return schoolsList;
             }

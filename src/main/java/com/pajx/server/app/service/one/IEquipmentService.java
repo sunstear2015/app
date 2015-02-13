@@ -17,6 +17,6 @@ public interface IEquipmentService {
     public void update(Equipment equipment)throws  Exception;
     public void delete(String uuid)throws  Exception;
     public Equipment getById(String equId) throws  Exception;
-    public Equipment getByNo(int equno,int type) throws  Exception;
+    public Equipment getByNo(long equno,int type) throws  Exception;
 }
 

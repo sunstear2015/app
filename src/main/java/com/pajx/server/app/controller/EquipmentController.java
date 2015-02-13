@@ -4,7 +4,6 @@ package com.pajx.server.app.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.pajx.server.app.base.BaseController;
 import com.pajx.server.app.entity.Equipment;
-import com.pajx.server.app.utils.security.MD5;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -186,6 +185,7 @@ public class EquipmentController extends BaseController {
             equipmentService.save(equipment);
             jsonObject.put("status", true);
             jsonObject.put("message", "保存成功");
+            jsonObject.put("EQUID",equipment.getEQU_ID());
             return jsonObject;
         } catch (Exception e) {
             e.printStackTrace();
@@ -205,7 +205,7 @@ public class EquipmentController extends BaseController {
     @RequestMapping(value = "/api/v1/equipment/check",method = RequestMethod.POST)
     public
     @ResponseBody
-    Object v1_checkEquioment(@RequestParam int equno, @RequestParam int equtype, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
+    Object v1_checkEquioment(@RequestParam long equno, @RequestParam int equtype, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
         try {
             JSONObject jsonObject = new JSONObject();
             if (StringUtils.isEmpty(pajx_sign)) {
@@ -298,5 +298,59 @@ public class EquipmentController extends BaseController {
         }
     }
 
-
+    /**
+     * Description:     更新设备
+     *
+     * @param equipment
+     * @param call_id   时间戳 System.currentTimeMillis()
+     * @return json
+     */
+    @RequestMapping(value = "/api/v1/equipment/update",method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Object v1_updateEquioment(@ModelAttribute Equipment equipment, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            if (StringUtils.isEmpty(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "参数签名为空");
+                return jsonObject;
+            }
+            if (StringUtils.isEmpty(api_key)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "api_key为空");
+                return jsonObject;
+            } else {
+                if (!api_key.equals(this.api_key)) {
+                    jsonObject.put("status", false);
+                    jsonObject.put("message", "api_key错误");
+                    return jsonObject;
+                }
+            }
+            /*String sign = generate_sign(equipment.toString()
+            );
+            if (!sign.equals(pajx_sign)) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "非法请求");
+                return jsonObject;
+            }*/
+            if (StringUtils.isEmpty(equipment.getEQU_ID())) {
+                jsonObject.put("status", false);
+                jsonObject.put("message", "设备id不存在");
+                return jsonObject;
+            }
+           // equipmentService.getById(equipment.getEQU_ID());
+            equipmentService.update(equipment);
+            jsonObject.put("status", true);
+            jsonObject.put("message", "更新成功");
+            jsonObject.put("EQUID",equipment.getEQU_ID());
+            return jsonObject;
+        } catch (Exception e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("status", false);
+            jsonObject.put("message", "更新失败");
+            return jsonObject;
+        }
+    }
 }

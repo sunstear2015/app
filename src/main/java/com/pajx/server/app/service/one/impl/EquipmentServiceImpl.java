@@ -53,8 +53,8 @@ public class EquipmentServiceImpl implements IEquipmentService {
     }
 
     @Override
-    public Equipment getByNo(int equno,int type) throws Exception {
-        String sql="from Equipment e where 1=1 and e.EQU_TYPE='"+type+"'and e.EQU_STATUS_FLAG='1' and e.EQU_NO="+equno;
+    public Equipment getByNo(long equno,int type) throws Exception {
+        String sql="from Equipment e where 1=1 and e.EQU_TYPE='"+type+"'and e.EQU_STATUS_FLAG='1' and e.EQU_NO='"+equno+"'";
         return equipmentDao.getByNo(sql);
     }
 }

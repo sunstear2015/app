@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Table(name = "HS_EQUIPMENT_INFO",schema = "HOME_SCHOOL")
 public class Equipment implements Serializable {
     private String SCL_ID;
-    private Integer EQU_NO;
+    private long EQU_NO;
     private String EQU_TYPE = "0";
     private String EQU_NAME_DC;
     private String EQU_SIP;
@@ -38,11 +38,11 @@ public class Equipment implements Serializable {
         this.SCL_ID = SCL_ID;
     }
 
-    public Integer getEQU_NO() {
+    public long getEQU_NO() {
         return EQU_NO;
     }
 
-    public void setEQU_NO(Integer EQU_NO) {
+    public void setEQU_NO(long EQU_NO) {
         this.EQU_NO = EQU_NO;
     }
 

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 提交用户功能
  * Created by taller on 15/1/27.
  */
 @Controller
@@ -24,7 +25,7 @@ public class UserController extends BaseController {
 
     /**
      * Description:     用户查询
-     *
+     * @param usertype
      * @param content
      * @param call_id 时间戳 System.currentTimeMillis()
      * @return json
@@ -137,7 +138,7 @@ public class UserController extends BaseController {
     }
 
     /**
-     * Description:     用户查询
+     * Description:     部门用户查询
      * @param call_id 时间戳 System.currentTimeMillis()
      * @return json
      */

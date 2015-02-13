@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 
 /**
+ * Controller super class
  * Created by admin on 2015/2/2.
  */
 public class BaseController {

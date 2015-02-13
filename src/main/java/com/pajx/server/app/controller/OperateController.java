@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 运营分析
  * Created by taller on 15/1/27.
  */
 @Controller
@@ -26,15 +27,14 @@ public class OperateController extends BaseController {
 
     /**
      * Description:     运营分析
-     *
      * @param deptcode
-     * @param call_id                     时间戳 System.currentTimeMillis()
+     * @param call_id   时间戳 System.currentTimeMillis()
      * @return json
      */
     @RequestMapping(value = "/api/v1/operate",method = RequestMethod.POST)
     public
     @ResponseBody
-    Object v1_login(@RequestParam String deptcode, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
+    Object v1_operate(@RequestParam String deptcode, @RequestParam String api_key, @RequestParam String pajx_sign, @RequestParam String call_id) {
         try {
             JSONObject jsonObject = new JSONObject();
             if (StringUtils.isEmpty(pajx_sign)) {

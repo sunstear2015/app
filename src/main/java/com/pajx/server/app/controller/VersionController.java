@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
+ * android 版本控制
  * Created by taller on 15/1/27.
  */
 @Controller
@@ -26,9 +27,8 @@ import java.util.Properties;
 public class VersionController extends BaseController {
 
     /**
-     * Description:     运营分析
-     *
-     * @param call_id                     时间戳 System.currentTimeMillis()
+     * Description:     版本控制
+     * @param call_id   时间戳 System.currentTimeMillis()
      * @return json
      */
     @RequestMapping(value = "/api/v1/version",method = RequestMethod.POST)

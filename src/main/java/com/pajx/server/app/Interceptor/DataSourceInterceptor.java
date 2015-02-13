@@ -10,12 +10,9 @@ public class DataSourceInterceptor {
     public void setDataSourceOne(JoinPoint jp) {
         CustomerContextHolder.clearCustomerType();
         CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_ORACLE1);
-        System.out.println(CustomerContextHolder.getCustomerType()+"----setDataSourceOne-----");
     }
-
     public void setDataSourceTwo(JoinPoint jp) {
         CustomerContextHolder.clearCustomerType();
         CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_ORACLE2);
-        System.out.println(CustomerContextHolder.getCustomerType()+"----setDataSourceTwo-----");
     }
 }

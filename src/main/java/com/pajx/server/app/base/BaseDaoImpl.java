@@ -61,7 +61,6 @@ public abstract class BaseDaoImpl<T> implements IBaseDao<T> {
 
     @Override
     public List<T> getByJdbcSql(String sql) {
-        System.out.print(CustomerContextHolder.getCustomerType()+"-getByJdbcSql");
         return getCurrentSession().createSQLQuery(sql).list();
     }
     public Session getCurrentSession(){

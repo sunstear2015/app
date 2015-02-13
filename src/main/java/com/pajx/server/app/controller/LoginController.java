@@ -77,41 +77,42 @@ public class LoginController extends BaseController {
             jsonObject.put("message", "非法请求");
             return jsonObject;
         }
-        Object[] o = new Object[11];
         try {
             if (usertype.equals("1")) {
-                o = userService.getByUserName(username, usertype);
+                Object[]  o = userService.getByUserName(username, usertype);
+                if (o == null) {
+                    jsonObject.put("status", false);
+                    jsonObject.put("message", "用户不存在");
+                    return jsonObject;
+                }
+                if (!password.equals(o[1])) {
+                    jsonObject.put("status", false);
+                    jsonObject.put("message", "用户密码错误");
+                    return jsonObject;
+                }
+                if (o[2].equals("0")) {
+                    jsonObject.put("status", false);
+                    jsonObject.put("message", "该账户已经被禁用");
+                    return jsonObject;
+                }
+                jsonObject.put("status", true);
+                jsonObject.put("message", "登陆成功");
+                jsonObject.put("ACCOUNT", o[0]);
+                jsonObject.put("ISU_STATUS_FLAG", o[2]);
+                jsonObject.put("ISU_GROUP_CODE", o[3]);
+                jsonObject.put("ISU_ROLE_CODE", o[4]);
+                jsonObject.put("DEPT_CODE", o[5]);
+                jsonObject.put("ISU_NAME", o[6]);
+                jsonObject.put("ISU_SEX", o[7]);
+                jsonObject.put("ISU_PHONE", o[8]);
+                jsonObject.put("MANAGER_FLAG", o[9]);
+                jsonObject.put("ISU_ID", o[10]);
+                jsonObject.put("DEPT_NAME", o[11]);
             } else {
-                o = outUserService.getByOutUser(username);
-            }
-            if (o == null) {
+               // o = outUserService.getByOutUser(username);
                 jsonObject.put("status", false);
-                jsonObject.put("message", "用户不存在");
-                return jsonObject;
+                jsonObject.put("message", "暂无开放");
             }
-            if (!password.equals(o[1])) {
-                jsonObject.put("status", false);
-                jsonObject.put("message", "用户密码错误");
-                return jsonObject;
-            }
-            if (o[2].equals("0")) {
-                jsonObject.put("status", false);
-                jsonObject.put("message", "该账户已经被禁用");
-                return jsonObject;
-            }
-            jsonObject.put("status", true);
-            jsonObject.put("message", "登陆成功");
-            jsonObject.put("ACCOUNT", o[0]);
-            jsonObject.put("ISU_STATUS_FLAG", o[2]);
-            jsonObject.put("ISU_GROUP_CODE", o[3]);
-            jsonObject.put("ISU_ROLE_CODE", o[4]);
-            jsonObject.put("DEPT_CODE", o[5]);
-            jsonObject.put("ISU_NAME", o[6]);
-            jsonObject.put("ISU_SEX", o[7]);
-            jsonObject.put("ISU_PHONE", o[8]);
-            jsonObject.put("MANAGER_FLAG", o[9]);
-            jsonObject.put("ISU_ID", o[10]);
-            jsonObject.put("DEPT_NAME", o[11]);
             return jsonObject;
         } catch (Exception e) {
             e.printStackTrace();

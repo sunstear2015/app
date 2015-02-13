@@ -39,6 +39,9 @@ public class OneSchoolServiceImpl implements IOneSchoolService {
         sclSql.append(" (SELECT count(1) FROM HOME_SCHOOL.BOSS_BIZBILL biz,HOME_SCHOOL.HS_FAMILY_INFO fam,HOME_SCHOOL.HS_STUDENT_INFO stu WHERE biz.BILL_ID =fam.LAST_BIZ_ID AND fam.STU_ID =stu.STU_ID AND biz.BILL_STATUS_FLAG ='4' AND biz.ORD_TYPE='03' AND fam.FAM_STATUS_FLAG  ='1' AND stu.STU_STATUS_FLAG  ='1' AND biz.price='B' AND stu.GRADUATE_FLAG='0' AND stu.SCL_ID =sch.SCL_ID) as B1,");
         sclSql.append(" (SELECT count(1) FROM HOME_SCHOOL.BOSS_BIZBILL biz,HOME_SCHOOL.HS_FAMILY_INFO fam, HOME_SCHOOL.HS_STUDENT_INFO stu WHERE biz.BILL_ID        =fam.LAST_BIZ_ID AND fam.STU_ID=stu.STU_ID AND biz.BILL_STATUS_FLAG ='4' AND biz.ORD_TYPE ='03'AND fam.FAM_STATUS_FLAG  ='1' AND stu.STU_STATUS_FLAG  ='1' AND biz.price='C' AND stu.GRADUATE_FLAG='0' AND stu.SCL_ID =sch.SCL_ID) as C1,");
         sclSql.append(" (SELECT count(1) FROM HOME_SCHOOL.BOSS_BIZBILL biz,HOME_SCHOOL.HS_FAMILY_INFO fam,HOME_SCHOOL.HS_STUDENT_INFO stu WHERE biz.BILL_ID =fam.LAST_BIZ_ID AND fam.STU_ID  =stu.STU_ID AND biz.BILL_STATUS_FLAG ='4' AND biz.ORD_TYPE='03' AND fam.FAM_STATUS_FLAG='1' AND stu.STU_STATUS_FLAG='1' AND biz.price='D' AND stu.GRADUATE_FLAG='0' AND stu.SCL_ID=sch.SCL_ID) as D1");
+       sclSql.append(" ,(SELECT ou.OSU_PHONE FROM SYS_OUTSIDE_USER ou WHERE ou.OSU_ID =sch.MOB_MANAGER_ID AND ou.OSU_STATUS_FLAG='1') AS OSU_PHONE");
+        sclSql.append(" ,(SELECT ISU_NAME FROM SYS_INSIDE_USER isu WHERE isu.ISU_ID =sch.SALE_KEEP_ID AND isu.ISU_STATUS_FLAG='1') AS SALE_KEEP_NAME");
+        sclSql.append(" ,(SELECT AREA_NAME FROM SYS_AREA area where area.AREA_CODE=sch.COUNTY_CODE ) as COUNTY_NAME");
         sclSql.append(" FROM HOME_SCHOOL.HS_SCHOOL_INFO sch where 1=1");
         sclSql.append(" and sch.SCL_ID='").append(sclid).append("'");
         List schoolsList = schoolDao.getSql(sclSql.toString());

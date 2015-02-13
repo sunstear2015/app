@@ -97,7 +97,6 @@ public class SchoolController extends BaseController {
             return jsonObject;
         }
     }
-
     public String getAreaCode(String deptcode) {
         CustomerContextHolder.clearCustomerType();
         CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_ORACLE1);
@@ -173,10 +172,17 @@ public class SchoolController extends BaseController {
                 jsonObject.put("B1", obj[16]);
                 jsonObject.put("C1", obj[17]);
                 jsonObject.put("D1", obj[18]);
+                jsonObject.put("MOB_MANAGER_PHONE", obj[19]);
+                jsonObject.put("SALE_KEEP_NAME",obj[20]);
+                jsonObject.put("COUNTY_NAME",obj[21]);
                 jsonObject.put("SCL_ID", sclid);
                 jsonObject.put("status", true);
                 jsonObject.put("message", "调用接口成功");
+            }else{
+                jsonObject.put("status", false);
+                jsonObject.put("message", "暂无数据");
             }
+
             return jsonObject;
         } catch (Exception e) {
             JSONObject jsonObject = new JSONObject();
@@ -188,7 +194,7 @@ public class SchoolController extends BaseController {
     }
 
     /**
-     * Description:    七天回溯
+     * Description: 七天回溯
      *
      * @param sclid, 学校id
      * @return json
